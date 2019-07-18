@@ -84,9 +84,6 @@ class NeteaseMusic:
         [
             {'name': '青花瓷', 'id': 5234112, 'artists': '何绮雯/缪晓铮/黄江琴/'}, 
             {'name': '青花瓷', 'id': 1337550384, 'artists': '葡萄bibo/'},
-            {'name': '青花瓷', 'id': 281264, 'artists': '彭芳/'}, 
-            {'name': '青花瓷', 'id': 454924421, 'artists': '张穆庭/'}, 
-            {'name': '青花瓷', 'id': 521749035, 'artists': '张琼/'}
         ]
         '''
         params = {
