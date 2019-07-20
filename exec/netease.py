@@ -19,11 +19,14 @@ class NeteaseMusic:
     save_path = './download/'
     dl_category = ''
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.keywords_dict = {}
         self.song_list = {}
         self.playlist_list = {}
         self.album_list = {}
+        self.count = 0
+
+    def initial(self, **kwargs):
         for k, v in kwargs.items():
             self.keywords_dict[k] = v
 
@@ -43,13 +46,12 @@ class NeteaseMusic:
                 'url': self.keywords_dict['url']
             }
             self.dl_category = category
-
+            
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)\
             Chrome/69.0.3497.100 Safari/537.36',
             'referer': self.keywords_dict['url']
         }
-        self.count = 0
 
     @property
     def __generate_song_id(self):
@@ -203,7 +205,8 @@ def anti_spider_censor(url):
 
 if __name__ == '__main__':
     url = anti_spider_censor(input('input: \n'))
-    netease_music = NeteaseMusic(url=url)
+    netease_music = NeteaseMusic()
+    netease_music.initial(url=url)
     netease_music.run()
     
 
