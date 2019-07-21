@@ -11,9 +11,11 @@ import re
 import json
 from bs4 import BeautifulSoup as bs
 import requests
+from utility import utils
+from utility import config
 
 class QQMusic:
-    music_search_api = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp?'
+    music_search_api = 'http://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
     token_url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?'
     music_dl_url = 'http://ws.stream.qqmusic.qq.com/'
 
@@ -23,7 +25,6 @@ class QQMusic:
         self.playlist_list = {}
         self.album_list = {}
         self.count = 0
-
 
     def download(self, song_dict):
         token_params = {
@@ -38,13 +39,11 @@ class QQMusic:
         token_get = requests.get(url=token_url, params=token_params)
         data = json.loads(token_get)
         vkey = data['data']['items'].get('vkey')
-
         mp3_params = {
             'fromtag': '0',
             'guid': '126548448',
             'vkey': vkey
         }
-
         mp3_url = music_dl_url + token_params['filename']
         mp3_stream = requests.get(url=mp3_url, params=mp3_params).content
 
@@ -58,15 +57,20 @@ class QQMusic:
         ]
         '''
         params = {
-            'aggr': 1,
-            'cr': 1,
-            'flag_qc': 0,
+            'format': 'json',
             'p': 1,
             'n': 10000,
             'w': name
         }
-        return_json = requests.post(url=self.music_search_api, data=params).text
-        data = json.loads(return_json)
+
+        session = requests.session()
+        session.headers.update(config.fake_headers)
+        session.headers.update(
+            {"referer": "http://m.y.qq.com", "User-Agent": config.ios_useragent}
+        )
+        r = session.get(self.music_search_api, params=params).text
+        data = json.loads(r)
+
         search_result = []
         for item in data['data']['song']['list']:
             if name in item.get('songname'):
@@ -80,4 +84,7 @@ class QQMusic:
                 })
         return search_result
 
-
+if __name__ == '__main__':
+    qqmusic = QQMusic()
+    search_list = qqmusic.search_music('稻香')
+    print(search_list)

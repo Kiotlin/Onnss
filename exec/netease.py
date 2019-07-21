@@ -11,6 +11,7 @@ import re
 import json
 import uuid
 from bs4 import BeautifulSoup as bs
+from utility import utils
 import requests
 
 class NeteaseMusic:
@@ -26,7 +27,7 @@ class NeteaseMusic:
         self.album_list = {}
         self.count = 0
 
-    def initial(self, **kwargs):
+    def initialate(self, **kwargs):
         for k, v in kwargs.items():
             self.keywords_dict[k] = v
 
@@ -74,11 +75,11 @@ class NeteaseMusic:
             file_path = f'{self.save_path}{self.__generate_album_id}.html'
 
         if os.path.exists(file_path):
-            content = self.read_file(file_path)
+            content = utils.read_file(file_path)
             return content
         else: # if not exist, cache in local
             content = requests.get(url=self.keywords_dict.get('url'), headers=self.headers).text
-            self.write_file(file_path, 'a', content, encoding='utf-8')
+            utils.write_file(file_path, 'a', content, encoding='utf-8')
             return content
 
     def search_music(self, name) -> list:
@@ -116,15 +117,6 @@ class NeteaseMusic:
                 if file.endswith('.html'):
                     file_path = os.path.join(root,file)
                     os.remove(file_path)
-
-    
-    def write_file(self, file_name, mode, content, encoding=None):
-        with open(file_name, mode, encoding=encoding) as f:
-            f.write(content)
-
-    def read_file(self, file_name):
-        with open(file_name, 'r', encoding='utf-8') as f:
-            return f.read()
 
     def __analysis_node(self, html):
         soup = bs(html, 'lxml')
@@ -180,7 +172,7 @@ class NeteaseMusic:
         mp3_url = self.music_download_url + song_id + '.mp3'
         mp3_stream = requests.get(url=mp3_url, headers=self.headers).content
         mp3_file_name = f'{self.save_path}{self.title}/{song_name}.mp3'
-        self.write_file(mp3_file_name, 'wb', mp3_stream)
+        utils.write_file(mp3_file_name, 'wb', mp3_stream)
 
     def __404_detect(self, url):
         status_code = requests.get(url=url, headers=self.headers).status_code
@@ -206,7 +198,7 @@ def anti_spider_censor(url):
 if __name__ == '__main__':
     url = anti_spider_censor(input('input: \n'))
     netease_music = NeteaseMusic()
-    netease_music.initial(url=url)
+    netease_music.initialate(url=url)
     netease_music.run()
     
 

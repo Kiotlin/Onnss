@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 # AUTHOR: Kiotlin
-# DATE: 2019/07/20 
-# TIME: 23:57:30
+# DATE: 2019/07/21 
+# TIME: 15:33:36
 
-# DESCRIPTION: utils.py
-
+# DESCRIPTION: __init__
