@@ -46,6 +46,7 @@ class QQMusic:
             vkey = item.get('vkey')
         if vkey == '': # 有些歌曲不开放下载
             print("该歌曲不支持下载") 
+            return
             
         # 第二次请求获取mp3源
         mp3_params = {
@@ -58,7 +59,7 @@ class QQMusic:
         mp3_file_name = self.save_path + song_dict['name'] + '.m4a'
         utils.write_file(mp3_file_name, 'wb', mp3_stream)
         
-        
+
     def search_music(self, name) -> list:
         '''
         [
@@ -96,6 +97,6 @@ class QQMusic:
 
 if __name__ == '__main__':
     qqmusic = QQMusic()
-    search_list = qqmusic.search_music('稻香')
+    search_list = qqmusic.search_music('七里香')
     for item in search_list:
         qqmusic.downloader(item)
